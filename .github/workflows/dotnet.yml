@@ -25,8 +25,8 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish
-#     - name: Upload App Build Artifact
-#       uses: actions/upload-artifact@v2
-#       with:
-#         name: Foodworld App
-#         path: /home/runner/work/foodworld/foodworld/FoodWorld/bin/Debug/net5.0/publish/
+    - name: Upload App Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: SeleniumSample
+        path: /home/runner/work/SeleniumSample/SeleniumSample/SeleniumSample/bin/Debug/net5.0/publish/
