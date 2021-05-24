@@ -13,7 +13,6 @@ namespace SeleniumSample
         {
             IConfiguration Configuration = BuildConfiguration();
             var url = Configuration.GetSection("url").Value;
-            var mobile = Configuration.GetSection("mobile").Value;
 
             ChromeOptions option = new ChromeOptions();
 
@@ -74,6 +73,11 @@ namespace SeleniumSample
 
                 if (!sessionExpired)
                 {
+                    appointment.ClickTimeSlot();
+
+                    // todo: This doesn't work as expected
+                    appointment.ReadCaptcha();
+
                     // wait unit vaccine is booked
                     Console.ReadKey();
                 }
