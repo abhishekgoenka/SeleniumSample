@@ -35,22 +35,49 @@ namespace SeleniumSample
                 var otp = Console.ReadLine();
 
                 loginPage.EnterOTP(otp);
+                var loginTime = DateTime.Now;
                 loginPage.ClickVerifyAndProceed();
 
                 // show dashboard path
                 Dashboard dashboard = new Dashboard(driver, Configuration);
                 wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                dashboard.ClicSchedule();
+                dashboard.ClickSchedule();
 
+                // search appointment
                 Appointment appointment = new Appointment(driver, Configuration);
                 appointment.ClicSearchByDistrict();
+                appointment.SelectState();
+                appointment.SelectDistrict();
 
-                //driver.FindElement(By.Name("q")).SendKeys("cheese" + Keys.Enter);
-                //wait.Until(webDriver => webDriver.FindElement(By.CssSelector("h3")).Displayed);
-                //IWebElement firstResult = driver.FindElement(By.CssSelector("h3"));
-                //Console.WriteLine(firstResult.GetAttribute("textContent"));
+                // look until we find that vaccine
+                bool sessionExpired = false;
+                do
+                {
+                    var sessionTime = DateTime.Now.Subtract(loginTime);
+                    Console.WriteLine($"Session duration {sessionTime}");
+                    if (sessionTime.TotalSeconds > 900)
+                    {
+                        Console.WriteLine("Session expired");
+                        sessionExpired = true;
+                        break;
+                    }
 
-                Console.ReadKey();
+                    appointment.ClickSearch();
+                    appointment.Select18Plus();
+
+                    // sleep for 5s
+                    Console.WriteLine("Sleeping for 5s");
+                    System.Threading.Thread.Sleep(5000);
+
+                } while (!appointment.BookTheSlotIfFound());
+
+
+                if (!sessionExpired)
+                {
+                    // wait unit vaccine is booked
+                    Console.ReadKey();
+                }
+
             }
 
 
