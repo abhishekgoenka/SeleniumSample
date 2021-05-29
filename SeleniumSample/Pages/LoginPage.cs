@@ -5,32 +5,30 @@ namespace SeleniumSample.Pages
 {
     class LoginPage
     {
-        private readonly IWebDriver driver;
         private readonly IConfiguration configuration;
 
-        public LoginPage(IWebDriver driver, IConfiguration Configuration)
+        public LoginPage(IConfiguration Configuration)
         {
-            this.driver = driver;
             configuration = Configuration;
         }
 
-        public void EnterMobileNumber()
+        public void EnterMobileNumber(IWebDriver driver)
         {
-            var mobile = configuration.GetSection("mobile").Value;
+            var mobile = configuration.GetSection("SeleniumConfig:mobile").Value;
             driver.FindElement(By.TagName("input")).SendKeys(mobile);
         }
 
-        public void ClickGetOTP()
+        public void ClickGetOTP(IWebDriver driver)
         {
             driver.FindElement(By.TagName("ion-button")).Click();
         }
 
-        public void EnterOTP(string otp)
+        public void EnterOTP(IWebDriver driver, string otp)
         {
             driver.FindElement(By.TagName("ion-item")).SendKeys(otp);
         }
 
-        public void ClickVerifyAndProceed()
+        public void ClickVerifyAndProceed(IWebDriver driver)
         {
             driver.FindElement(By.TagName("ion-button")).Click();
         }

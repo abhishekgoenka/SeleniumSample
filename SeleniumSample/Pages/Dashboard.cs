@@ -7,16 +7,14 @@ namespace SeleniumSample.Pages
 {
     public class Dashboard
     {
-        private readonly IWebDriver driver;
         private readonly IConfiguration configuration;
 
-        public Dashboard(IWebDriver driver, IConfiguration Configuration)
+        public Dashboard(IConfiguration Configuration)
         {
-            this.driver = driver;
             configuration = Configuration;
         }
 
-        public void ClickSchedule()
+        public void ClickSchedule(IWebDriver driver)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.LinkText("Schedule")));

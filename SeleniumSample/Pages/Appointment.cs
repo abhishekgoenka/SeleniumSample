@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using OpenQA.Selenium;
+using SeleniumSample.Models;
+using SeleniumSample.Repository;
 using System;
 using System.Drawing;
 using Tesseract;
@@ -8,24 +10,24 @@ namespace SeleniumSample.Pages
 {
     class Appointment
     {
-        private readonly IWebDriver driver;
         private readonly IConfiguration configuration;
+        private readonly VaccineDbContext context;
 
-        public Appointment(IWebDriver driver, IConfiguration Configuration)
+        public Appointment(IConfiguration Configuration, VaccineDbContext context)
         {
-            this.driver = driver;
             configuration = Configuration;
+            this.context = context;
         }
 
-        public void ClicSearchByDistrict()
+        public void ClicSearchByDistrict(IWebDriver driver)
         {
             System.Threading.Thread.Sleep(3000);
             driver.FindElement(By.ClassName("custom-checkbox")).Click();
         }
 
-        public void SelectState()
+        public void SelectState(IWebDriver driver)
         {
-            var state = configuration.GetSection("state").Value;
+            var state = configuration.GetSection("SeleniumConfig:state").Value;
 
             //create select element object 
             driver.FindElement(By.Id("mat-select-0")).Click();
@@ -33,9 +35,9 @@ namespace SeleniumSample.Pages
             driver.FindElement(By.Id(state)).Click();
         }
 
-        public void SelectDistrict()
+        public void SelectDistrict(IWebDriver driver)
         {
-            var district = configuration.GetSection("district").Value;
+            var district = configuration.GetSection("SeleniumConfig:district").Value;
 
             System.Threading.Thread.Sleep(3000);
             driver.FindElement(By.Id("mat-select-2")).Click();
@@ -44,15 +46,15 @@ namespace SeleniumSample.Pages
             driver.FindElement(By.Id(district)).Click();
         }
 
-        public void ClickSearch()
+        public void ClickSearch(IWebDriver driver)
         {
             driver.FindElement(By.TagName("ion-button")).Click();
         }
 
-        public void Select18Plus()
+        public void Select18Plus(IWebDriver driver)
         {
-            var covaxin = configuration.GetSection("covaxin").Value;
-            var covishield = configuration.GetSection("covishield").Value;
+            var covaxin = configuration.GetSection("SeleniumConfig:covaxin").Value;
+            var covishield = configuration.GetSection("SeleniumConfig:covishield").Value;
 
             var elements = driver.FindElements(By.TagName("label"));
 
@@ -74,7 +76,7 @@ namespace SeleniumSample.Pages
             }
         }
 
-        public bool BookTheSlotIfFound()
+        public bool BookTheSlotIfFound(IWebDriver driver)
         {
             var elements = driver.FindElements(By.TagName("a"));
 
@@ -86,10 +88,18 @@ namespace SeleniumSample.Pages
                 if (e.Text != string.Empty)
                 {
                     // does text is number
-                    if (Int32.TryParse(e.Text, out _))
+                    int qty;
+                    if (Int32.TryParse(e.Text, out qty))
                     {
                         Console.WriteLine($"{e.Text} vaccine found");
                         e.Click();
+
+                        // add record in DB
+                        string vaccine = "abc";
+                        string center = "cen";
+                        AddRecordInDB(vaccine, center, qty);
+                        Console.WriteLine("Record added to DB");
+
                         return true;
                     }
                 }
@@ -97,15 +107,15 @@ namespace SeleniumSample.Pages
             return false;
         }
 
-        public void ClickTimeSlot()
+        public void ClickTimeSlot(IWebDriver driver)
         {
             driver.FindElement(By.TagName("ion-button")).Click();
         }
 
-        public void ReadCaptcha()
+        public void ReadCaptcha(IWebDriver driver)
         {
             IWebElement capta = driver.FindElement(By.Id("captchaImage"));
-            string fileName = TakeScreenshot(capta);
+            string fileName = TakeScreenshot(capta, driver);
 
 
             using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
@@ -128,7 +138,7 @@ namespace SeleniumSample.Pages
         }
 
 
-        private string TakeScreenshot(IWebElement element)
+        private string TakeScreenshot(IWebElement element, IWebDriver driver)
         {
             if (!System.IO.Directory.Exists("screenshots"))
             {
@@ -143,6 +153,18 @@ namespace SeleniumSample.Pages
             screenshot.Save(fileName, System.Drawing.Imaging.ImageFormat.Tiff);
             return fileName
         ;
+        }
+
+        public void AddRecordInDB(string vaccine, string center, int qty)
+        {
+            AvailableSlot availableSlot = new AvailableSlot();
+            availableSlot.Vaccine = vaccine;
+            availableSlot.Center = center;
+            availableSlot.Qty = qty;
+            availableSlot.DTTM = DateTime.Now;
+
+            context.AvailableSlot.Add(availableSlot);
+            context.SaveChanges();
         }
     }
 }
