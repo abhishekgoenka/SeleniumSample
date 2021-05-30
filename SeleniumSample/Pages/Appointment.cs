@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using SeleniumSample.Models;
 using SeleniumSample.Repository;
+using SeleniumSample.Settings;
 using System;
 using System.Drawing;
 using Tesseract;
@@ -10,12 +11,12 @@ namespace SeleniumSample.Pages
 {
     class Appointment
     {
-        private readonly IConfiguration configuration;
+        private readonly IOptions<SeleniumSettings> options;
         private readonly VaccineDbContext context;
 
-        public Appointment(IConfiguration Configuration, VaccineDbContext context)
+        public Appointment(IOptions<SeleniumSettings> options, VaccineDbContext context)
         {
-            configuration = Configuration;
+            this.options = options;
             this.context = context;
         }
 
@@ -27,23 +28,19 @@ namespace SeleniumSample.Pages
 
         public void SelectState(IWebDriver driver)
         {
-            var state = configuration.GetSection("SeleniumConfig:state").Value;
-
             //create select element object 
             driver.FindElement(By.Id("mat-select-0")).Click();
             System.Threading.Thread.Sleep(3000);
-            driver.FindElement(By.Id(state)).Click();
+            driver.FindElement(By.Id(options.Value.state)).Click();
         }
 
         public void SelectDistrict(IWebDriver driver)
         {
-            var district = configuration.GetSection("SeleniumConfig:district").Value;
-
             System.Threading.Thread.Sleep(3000);
             driver.FindElement(By.Id("mat-select-2")).Click();
 
             System.Threading.Thread.Sleep(3000);
-            driver.FindElement(By.Id(district)).Click();
+            driver.FindElement(By.Id(options.Value.district)).Click();
         }
 
         public void ClickSearch(IWebDriver driver)
@@ -53,9 +50,6 @@ namespace SeleniumSample.Pages
 
         public void Select18Plus(IWebDriver driver)
         {
-            var covaxin = configuration.GetSection("SeleniumConfig:covaxin").Value;
-            var covishield = configuration.GetSection("SeleniumConfig:covishield").Value;
-
             var elements = driver.FindElements(By.TagName("label"));
 
             foreach (var e in elements)
@@ -64,11 +58,11 @@ namespace SeleniumSample.Pages
                 {
                     e.Click();
                 }
-                else if (covaxin == "1" && e.Text == "Covaxin")
+                else if (options.Value.covaxin && e.Text == "Covaxin")
                 {
                     e.Click();
                 }
-                else if (covishield == "1" && e.Text == "Covishield")
+                else if (options.Value.covishield && e.Text == "Covishield")
                 {
                     e.Click();
                 }

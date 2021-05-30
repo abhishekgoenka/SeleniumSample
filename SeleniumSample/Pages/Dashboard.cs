@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
 
@@ -7,11 +6,9 @@ namespace SeleniumSample.Pages
 {
     public class Dashboard
     {
-        private readonly IConfiguration configuration;
-
-        public Dashboard(IConfiguration Configuration)
+        public Dashboard()
         {
-            configuration = Configuration;
+
         }
 
         public void ClickSchedule(IWebDriver driver)

@@ -1,21 +1,21 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
+using SeleniumSample.Settings;
 
 namespace SeleniumSample.Pages
 {
     class LoginPage
     {
-        private readonly IConfiguration configuration;
+        private readonly IOptions<SeleniumSettings> options;
 
-        public LoginPage(IConfiguration Configuration)
+        public LoginPage(IOptions<SeleniumSettings> options)
         {
-            configuration = Configuration;
+            this.options = options;
         }
 
         public void EnterMobileNumber(IWebDriver driver)
         {
-            var mobile = configuration.GetSection("SeleniumConfig:mobile").Value;
-            driver.FindElement(By.TagName("input")).SendKeys(mobile);
+            driver.FindElement(By.TagName("input")).SendKeys(options.Value.mobile);
         }
 
         public void ClickGetOTP(IWebDriver driver)

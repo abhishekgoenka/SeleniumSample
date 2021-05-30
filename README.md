@@ -1,7 +1,4 @@
 # SeleniumSample
-A selenium sample project in .NET
-
-# SeleniumSample
 This project demonstrates to use of Selenium using .NET
 
 # Before you begin

@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumSample.Pages;
 using SeleniumSample.Repository;
+using SeleniumSample.Settings;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,10 +23,11 @@ namespace SeleniumSample
         private readonly LoginPage _loginPage;
         private readonly Dashboard _dashboard;
         private readonly Appointment _appointment;
+        private readonly IOptions<SeleniumSettings> _options;
 
         public ConsoleHostedService(
             ILogger<ConsoleHostedService> logger,
-            IHostApplicationLifetime appLifetime, IConfiguration configuration, VaccineDbContext dbContext, LoginPage loginPage, Dashboard dashboard, Appointment appointment)
+            IHostApplicationLifetime appLifetime, IConfiguration configuration, VaccineDbContext dbContext, LoginPage loginPage, Dashboard dashboard, Appointment appointment, IOptions<SeleniumSettings> options)
         {
             _logger = logger;
             _appLifetime = appLifetime;
@@ -33,6 +36,7 @@ namespace SeleniumSample
             _loginPage = loginPage;
             _dashboard = dashboard;
             _appointment = appointment;
+            _options = options;
         }
 
 
@@ -55,15 +59,14 @@ namespace SeleniumSample
                         using (IWebDriver driver = new ChromeDriver(option))
                         {
                             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                            var url = _configuration.GetSection("SeleniumConfig:URL").Value;
-                            driver.Navigate().GoToUrl(url);
+                            driver.Navigate().GoToUrl(_options.Value.URL);
 
                             // LoginPage
                             _loginPage.EnterMobileNumber(driver);
                             _loginPage.ClickGetOTP(driver);
 
                             // OTP user input
-                            Console.WriteLine("Enter OTP");
+                            Console.Write("Enter OTP : ");
                             var otp = Console.ReadLine();
 
                             _loginPage.EnterOTP(driver, otp);

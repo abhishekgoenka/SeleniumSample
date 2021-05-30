@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SeleniumSample.Pages;
 using SeleniumSample.Repository;
+using SeleniumSample.Settings;
 using System.Threading.Tasks;
 
 namespace SeleniumSample
@@ -27,7 +28,8 @@ namespace SeleniumSample
                 .AddDbContext<VaccineDbContext>(context =>
                 {
                     context.UseSqlite(hostContext.Configuration.GetConnectionString("sqliteConnectionString"));
-                });
+                })
+                .Configure<SeleniumSettings>(hostContext.Configuration.GetSection(nameof(SeleniumSettings)));
             });
     }
 }
