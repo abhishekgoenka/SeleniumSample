@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
@@ -18,7 +17,6 @@ namespace SeleniumSample
     {
         private readonly ILogger _logger;
         private readonly IHostApplicationLifetime _appLifetime;
-        private readonly IConfiguration _configuration;
         private readonly VaccineDbContext _dbContext;
         private readonly LoginPage _loginPage;
         private readonly Dashboard _dashboard;
@@ -27,11 +25,10 @@ namespace SeleniumSample
 
         public ConsoleHostedService(
             ILogger<ConsoleHostedService> logger,
-            IHostApplicationLifetime appLifetime, IConfiguration configuration, VaccineDbContext dbContext, LoginPage loginPage, Dashboard dashboard, Appointment appointment, IOptions<SeleniumSettings> options)
+            IHostApplicationLifetime appLifetime, VaccineDbContext dbContext, LoginPage loginPage, Dashboard dashboard, Appointment appointment, IOptions<SeleniumSettings> options)
         {
             _logger = logger;
             _appLifetime = appLifetime;
-            _configuration = configuration;
             _dbContext = dbContext;
             _loginPage = loginPage;
             _dashboard = dashboard;
@@ -74,7 +71,6 @@ namespace SeleniumSample
                             _loginPage.ClickVerifyAndProceed(driver);
 
                             // show dashboard path
-                            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
                             _dashboard.ClickSchedule(driver);
 
                             // search appointment

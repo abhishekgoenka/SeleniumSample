@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumSample.Helpers;
 using System;
 
 namespace SeleniumSample.Pages
@@ -13,10 +14,11 @@ namespace SeleniumSample.Pages
 
         public void ClickSchedule(IWebDriver driver)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.LinkText("Schedule")));
-            System.Threading.Thread.Sleep(5000);
-            driver.FindElement(By.LinkText("Schedule")).Click();
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+
+            //IWebElement scheduleLink = wait.Until(ExpectedConditions.ElementExists(By.LinkText("Schedule")));
+            IWebElement scheduleLink = wait.Until(SeleniumHelpers.ElementExists(By.LinkText("Schedule")));
+            scheduleLink.Click();
         }
     }
 }
