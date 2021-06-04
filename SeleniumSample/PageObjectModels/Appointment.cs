@@ -7,7 +7,7 @@ using System;
 using System.Drawing;
 using Tesseract;
 
-namespace SeleniumSample.Pages
+namespace SeleniumSample.PageObjectModels
 {
     class Appointment
     {
@@ -83,7 +83,7 @@ namespace SeleniumSample.Pages
                 {
                     // does text is number
                     int qty;
-                    if (Int32.TryParse(e.Text, out qty))
+                    if (int.TryParse(e.Text, out qty))
                     {
                         Console.WriteLine($"{e.Text} vaccine found");
                         e.Click();
@@ -140,7 +140,7 @@ namespace SeleniumSample.Pages
             }
 
             string fileName = "screenshots\\" + DateTime.Now.ToString("yyyyy-MM-dd HH-mm-ss") + ".tif";
-            Byte[] byteArray = ((ITakesScreenshot)driver).GetScreenshot().AsByteArray;
+            byte[] byteArray = ((ITakesScreenshot)driver).GetScreenshot().AsByteArray;
             Bitmap screenshot = new Bitmap(new System.IO.MemoryStream(byteArray));
             Rectangle croppedImage = new Rectangle(element.Location.X, element.Location.Y, element.Size.Width, element.Size.Height);
             screenshot = screenshot.Clone(croppedImage, screenshot.PixelFormat);

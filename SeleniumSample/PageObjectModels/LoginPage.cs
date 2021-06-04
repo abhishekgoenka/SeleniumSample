@@ -2,7 +2,7 @@
 using OpenQA.Selenium;
 using SeleniumSample.Settings;
 
-namespace SeleniumSample.Pages
+namespace SeleniumSample.PageObjectModels
 {
     class LoginPage
     {

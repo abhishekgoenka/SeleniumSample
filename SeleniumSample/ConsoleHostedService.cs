@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using SeleniumSample.Pages;
+using SeleniumSample.PageObjectModels;
 using SeleniumSample.Repository;
 using SeleniumSample.Settings;
 using System;

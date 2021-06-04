@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SeleniumSample.Pages;
+using SeleniumSample.PageObjectModels;
 using SeleniumSample.Repository;
 using SeleniumSample.Settings;
 using System.Threading.Tasks;

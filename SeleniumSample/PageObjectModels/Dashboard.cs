@@ -3,7 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumSample.Helpers;
 using System;
 
-namespace SeleniumSample.Pages
+namespace SeleniumSample.PageObjectModels
 {
     public class Dashboard
     {
