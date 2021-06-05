@@ -22,8 +22,6 @@ namespace SeleniumSample
             Host.CreateDefaultBuilder(args).ConfigureServices((hostContext, services) =>
             {
                 services.AddHostedService<ConsoleHostedService>()
-                .AddSingleton<LoginPage>()
-                .AddSingleton<Dashboard>()
                 .AddSingleton<Appointment>()
                 .AddDbContext<VaccineDbContext>(context =>
                 {

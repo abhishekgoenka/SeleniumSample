@@ -7,12 +7,14 @@ namespace SeleniumSample.PageObjectModels
 {
     public class Dashboard
     {
-        public Dashboard()
-        {
+        private readonly IWebDriver driver;
 
+        public Dashboard(IWebDriver driver)
+        {
+            this.driver = driver;
         }
 
-        public void ClickSchedule(IWebDriver driver)
+        public void ClickSchedule()
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 

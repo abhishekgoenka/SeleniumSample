@@ -18,20 +18,16 @@ namespace SeleniumSample
         private readonly ILogger _logger;
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly VaccineDbContext _dbContext;
-        private readonly LoginPage _loginPage;
-        private readonly Dashboard _dashboard;
         private readonly Appointment _appointment;
         private readonly IOptions<SeleniumSettings> _options;
 
         public ConsoleHostedService(
             ILogger<ConsoleHostedService> logger,
-            IHostApplicationLifetime appLifetime, VaccineDbContext dbContext, LoginPage loginPage, Dashboard dashboard, Appointment appointment, IOptions<SeleniumSettings> options)
+            IHostApplicationLifetime appLifetime, VaccineDbContext dbContext, Appointment appointment, IOptions<SeleniumSettings> options)
         {
             _logger = logger;
             _appLifetime = appLifetime;
             _dbContext = dbContext;
-            _loginPage = loginPage;
-            _dashboard = dashboard;
             _appointment = appointment;
             _options = options;
         }
@@ -59,19 +55,20 @@ namespace SeleniumSample
                             driver.Navigate().GoToUrl(_options.Value.URL);
 
                             // LoginPage
-                            _loginPage.EnterMobileNumber(driver);
-                            _loginPage.ClickGetOTP(driver);
+                            LoginPage loginPage = new LoginPage(_options.Value, driver);
+                            loginPage.EnterMobileNumber();
+                            loginPage.ClickGetOTP();
 
                             // OTP user input
                             Console.Write("Enter OTP : ");
                             var otp = Console.ReadLine();
 
-                            _loginPage.EnterOTP(driver, otp);
+                            loginPage.EnterOTP(otp);
                             var loginTime = DateTime.Now;
-                            _loginPage.ClickVerifyAndProceed(driver);
+                            var dashboard = loginPage.ClickVerifyAndProceed();
 
                             // show dashboard path
-                            _dashboard.ClickSchedule(driver);
+                            dashboard.ClickSchedule();
 
                             // search appointment
                             _appointment.ClicSearchByDistrict(driver);

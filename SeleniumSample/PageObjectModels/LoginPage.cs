@@ -1,36 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using SeleniumSample.Settings;
 
 namespace SeleniumSample.PageObjectModels
 {
     class LoginPage
     {
-        private readonly IOptions<SeleniumSettings> options;
+        private readonly SeleniumSettings options;
+        private readonly IWebDriver driver;
 
-        public LoginPage(IOptions<SeleniumSettings> options)
+        public LoginPage(SeleniumSettings options, IWebDriver driver)
         {
             this.options = options;
+            this.driver = driver;
         }
 
-        public void EnterMobileNumber(IWebDriver driver)
-        {
-            driver.FindElement(By.TagName("input")).SendKeys(options.Value.mobile);
-        }
 
-        public void ClickGetOTP(IWebDriver driver)
-        {
-            driver.FindElement(By.TagName("ion-button")).Click();
-        }
+        public void EnterMobileNumber() => driver.FindElement(By.TagName("input")).SendKeys(options.mobile);
 
-        public void EnterOTP(IWebDriver driver, string otp)
-        {
-            driver.FindElement(By.TagName("ion-item")).SendKeys(otp);
-        }
+        public void ClickGetOTP() => driver.FindElement(By.TagName("ion-button")).Click();
 
-        public void ClickVerifyAndProceed(IWebDriver driver)
+        public void EnterOTP(string otp) => driver.FindElement(By.TagName("ion-item")).SendKeys(otp);
+
+        public Dashboard ClickVerifyAndProceed()
         {
             driver.FindElement(By.TagName("ion-button")).Click();
+            return new Dashboard(driver);
         }
     }
 }
