@@ -3,15 +3,13 @@ using SeleniumSample.Settings;
 
 namespace SeleniumSample.PageObjectModels
 {
-    class LoginPage
+    class LoginPage : Page
     {
         private readonly SeleniumSettings options;
-        private readonly IWebDriver driver;
 
-        public LoginPage(SeleniumSettings options, IWebDriver driver)
+        public LoginPage(SeleniumSettings options, IWebDriver driver) : base(driver)
         {
             this.options = options;
-            this.driver = driver;
         }
 
 

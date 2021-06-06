@@ -5,13 +5,10 @@ using System;
 
 namespace SeleniumSample.PageObjectModels
 {
-    public class Dashboard
+    public class Dashboard : Page
     {
-        private readonly IWebDriver driver;
-
-        public Dashboard(IWebDriver driver)
+        public Dashboard(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
 
         public void ClickSchedule()
